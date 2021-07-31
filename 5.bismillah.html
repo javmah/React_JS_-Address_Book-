@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+		integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+		integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+		crossorigin="anonymous"></script>
+
+	<title> 786. Bismillah Hir Rahmaner Rahim </title>
+</head>
+<body>
+	<!-- Container starts  -->
+	<div id="container" class="container" >
+		<br>
+		<br>
+		<div id="root">
+			
+		</div>
+	</div>
+	<!-- container ends -->
+
+	<!-- Including scripts for react -->
+	<script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+	<script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+	<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+	<!-- Scripts Starts -->
+	<script type="text/babel">
+		// Search and Add Component
+		class SearchAndAdd extends React.Component {
+			render() {
+				return (
+					<div className="row">
+						<div className="col-sm-11 col-md-11 col-lg-11">
+							<div className="form-group">
+								<input type="text" className="form-control" placeholder="search contact" id="usr"/>
+							</div>
+						</div>
+
+						<div className="col-sm-1 co l-md-1 col-lg-1">
+							<button type="button" onClick={this.props.showFormFunc}  className="btn btn-primary"> +Add  </button>
+						</div>
+					</div> 
+				);
+			} 
+		}
+
+		// Contact list Components
+		class ContactList extends React.Component {
+			render() {
+				return (
+					<div className="row">
+						<div className="col-sm-12 col-md-12 col-lg-12">
+							{
+								this.props.ContactListArr.map((item, index) => (
+									<div className="well" key={this.props.ContactListArr[index].id}>
+										<h3> {this.props.ContactListArr[index].name}    </h3>
+										<p>  {this.props.ContactListArr[index].email} || {this.props.ContactListArr[index].number} </p>
+										<p>  <a  href='#'> Edit </a> <a  href='#'> Delete </a> </p>
+									</div>
+								))
+							}
+						</div>
+					</div>
+				);
+			}
+		}
+
+		// Add Contact
+		class AddContact extends React.Component {
+
+			constructor(props) {
+				super(props);
+				this.state = {
+					contact: {
+						id		: "",
+						name	: "",
+						email	: "",
+						number	: "",
+					}
+				}
+			}
+
+			handleStatusChanged = (event) => {
+				var contact = this.state.contact;
+				// Setting id random number 
+				contact.id = (Math.random() + 1).toString(36).substring(7);
+
+				if( event.target.name === 'name'){
+					contact.name = event.target.value;
+				}
+
+				if( event.target.name === 'email'){
+					contact.email = event.target.value;
+				}
+
+				if( event.target.name === 'number'){
+					contact.number = event.target.value;
+				}
+
+				this.setState({ contact: contact });
+			}
+			
+			render() {
+				return (
+					<div className="row">
+						<div className="col-sm-12 col-md-12 col-lg-12">
+							<div className="form-group">
+								<label htmlFor="usr">Name:</label>
+								<input type="text" name="name" value={this.state.contact.name} onChange={this.handleStatusChanged.bind(this)} className="form-control" placeholder="Full name" id="usr"/>
+							</div>
+
+							<div className="form-group">
+								<label htmlFor="usr">Email:</label>
+								<input type="email" name="email" value={this.state.contact.email} onChange={this.handleStatusChanged.bind(this)} className="form-control" placeholder="Email address" id="usr"/>
+							</div>
+
+							<div className="form-group">
+								<label htmlFor="usr">Telephone number:</label>
+								<input type="tel" name="number" value={this.state.contact.number} onChange={this.handleStatusChanged.bind(this)} className="form-control" placeholder="Telephone number" id="usr"/>
+							</div>
+
+							<div className="form-group">
+								<button type="button" onClick={this.props.hideFormFunc}  className="btn btn-warning btn-primary active">Cancel</button>  
+								<button type="button" onClick={this.props.addNewContacts.bind(this, this.state.contact) }   className="btn btn-primary active">Save Contact</button>
+							</div>
+						</div>
+					</div>
+				);
+			}
+		}
+
+		// Parent Component to Combine all Component
+		class ParentComponent extends React.Component {
+			
+			state = {
+				ContactListArr :[
+					{ id: "01", name: "John Pall", email: "John@gmail.com", number: "+8801730412455" },
+					{ id: "02", name: "John Doe", email: "doe@gmail.com", number: "+8801730412455" },
+					{ id: "03", name: "John Sina", email: "sina@gmail.com", number: "+8801730412455" },
+				],
+				showForm : false,
+			} 
+
+			// *** remember those are arrow Function || this will create Problem !!
+			showFormFunc = () => {
+				this.setState({ showForm: true  })
+			}
+
+			// *** remember those are arrow Function || this will create Problem !!
+			hideFormFunc = () => {
+				this.setState({ showForm: false })
+			}
+
+			// *** remember those are arrow Function || this will create Problem !!
+			addNewContacts = (data) => {
+				console.log(data);
+				// var newObj = [...this.state.ContactListArr, { id: "04", name: "Javed mahmud", email: "jav@gmail.com", number: " + 8801720012412" } ]
+				var newObj = [...this.state.ContactListArr, data ]
+				this.setState({ ContactListArr: newObj });
+				this.setState({ showForm: false });
+			}
+
+			render() {
+				return (
+					<div id="root">
+						{ this.state.showForm ? 
+							<div> <AddContact hideFormFunc={ this.hideFormFunc } addNewContacts={ this.addNewContacts } /> </div> :
+							<div> 
+								<SearchAndAdd showFormFunc={ this.showFormFunc } />
+								<ContactList ContactListArr={ this.state.ContactListArr } /> 
+							</div>
+						}
+					</div>
+				);
+			}
+		}
+
+		// Parent Component render 
+		ReactDOM.render(
+			<ParentComponent/>,
+			document.getElementById('container')
+		);
+
+	</script>
+	<!-- Script Ends -->
+</body>
+</html>
